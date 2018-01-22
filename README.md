@@ -6,7 +6,7 @@
 从excel里读数据，用requests请求接口、用exec生成case代码，最后通过HTMLTestRunner生成报告。
 
 ## 用法：    
-python运行excel_unittest.py”开始测试。</br>
+python运行excel_unittest.py开始测试。</br>
 在Excel文件中维护接口测试数据。</br>
 
 ## 接口参数存放格式说明：
