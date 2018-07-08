@@ -29,7 +29,7 @@
 · 若是GET接口-->将接口URL整体存入Excel文档中url字段，然后url_params字段空着，即可使用。  
 · 若是POST接口-->将接口URL存入Excel文档中url字段，再将body存入url_params字段，即可使用。  
 #### 断言说明：  
-因为公司项目返回都是json，因此写的2个断言函数痘是对json数据的断言，因此若接口返回html、xml，此脚本暂不支持，请自己写断言函数。  
+因为公司项目返回都是json，因此写的2个断言函数都是对json数据的断言，因此若接口返回html、xml，此脚本暂不支持，请自己写断言函数。  
 
 #### 断言类型说明（check_point_type字段的值）：  
 目前有2种断言方法: check_single_node()和run_script()。  
