@@ -6,18 +6,41 @@
 测试报告：HTMLTestRunner
 """
 
+import os
 import HTMLTestRunner
-from openpyxl import load_workbook
-from openpyxl.cell.read_only import EmptyCell
+import ddt
+import unittest
 from utils.request_util import RequestUtil
 import utils.response_util as resp_util
-import unittest
-import os
+from utils.ExcelUtil import ParseExcel
 # import traceback
 # import json
+import logging
 import jsonpath
 
 
+# 初始化日志对象
+logging.basicConfig(
+    # 日志级别
+    level=logging.INFO,
+    # 日志格式
+    # 时间、代码所在文件名、代码行号、日志级别名字、日志信息
+    format='%(asctime)s %(filename)s [line:%(lineno)d]: %(levelname)s %(message)s',
+    # 打印日志的时间
+    datefmt='%a, %Y-%m-%d %H:%M:%S',
+    # 日志文件存放的目录（目录必须存在）及日志文件名
+    filename='./test_log.log',
+    # 打开日志文件的方式
+    filemode='w'
+)
+
+
+# 从Excel获取数据
+excel_file = u'./unit_excel.xlsx'
+pe = ParseExcel(excel_file)
+
+
+@ddt.ddt
 class ExcelUnitTest(unittest.TestCase):
     """存接口的excel文件"""
 
@@ -64,6 +87,21 @@ class ExcelUnitTest(unittest.TestCase):
             error_text = "request_method输入类型有误！无此http请求方法。"
             raise TypeError(error_text)
 
+    @ddt.data(*pe.get_data_from_sheet(0))
+    def test_data_driven(self, row_data_list):
+        """ddt测试函数"""
+        row_data = self.convert_params(row_data_list)    # 行数据整备
+        try:
+            # 请求http协议接口 -> method／url／url_params
+            resp = self.http_request(row_data[2], row_data[3], row_data[4])
+            # json解析
+            resp_json_obj = resp_util.json_decrypt(resp)
+            # 断言结果 -> check_point_type／check_node_path／expected_result
+            print(type(row_data[7]), row_data[7])
+            self.check_resp(resp_json_obj, row_data[5], row_data[6], row_data[7])
+        except Exception as e:
+            raise e
+
     # --------------------------------------------------------------------------------
     def check_resp(self, resp_json_obj,
                    check_point_type, node_path_or_script, expected_result):
@@ -101,83 +139,22 @@ class ExcelUnitTest(unittest.TestCase):
         # self.assertEqual(result, expected_result)
 
 
-def set_code(class_type, function_name, code_str):
-    """动态给指定的类添加方法的函数"""
-    attr_method = None
-    exec(code_str + '\nattr_method = %s' % function_name)
-    setattr(class_type, function_name, attr_method)
+if __name__ == '__main__':
+    # 无报告运行unittest，测试脚本用
+    # unittest.main(verbosity=2)
 
-
-def case1(method_name, row_value_list):
-    """设定动态方法"""
-    function_code_str = '''
-def %(method_name)s(self):
-    # 将行数据存储
-    row_data = self.convert_params(%(row_value_list)s)
-    try:
-        # 请求http协议接口 -> method／url／url_params
-        resp = self.http_request(row_data[2], row_data[3], row_data[4])
-        # json解析
-        resp_json_obj = resp_util.json_decrypt(resp)
-        # 断言结果 -> check_point_type／check_node_path／expected_result
-        self.check_resp(resp_json_obj, row_data[5], row_data[6], row_data[7])
-    except Exception as e:
-        raise e
-
-    ''' % dict(
-        method_name=method_name,
-        row_value_list=row_value_list,
-    )
-    set_code(ExcelUnitTest, method_name, function_code_str)
-
-
-def excel_driven(excel_file):
-    """动态从Excel添加TestCase方法"""
-    wb = load_workbook(filename=excel_file, read_only=True)
-    ws = wb['Sheet1']
-    # 设置测试套件
-    test_suite = unittest.TestSuite()
-    # 遍历Excel里内容
-    for line_num, row in enumerate(ws.rows):
-        if not isinstance(row[0], EmptyCell):  # 有遇到都是None的空行
-            if line_num == 0:  # 第1行跳过
-                continue
-            row_value_list = map(lambda it: it.value, row)  # 读取每行数据
-            temp_case_name = "test_%s" % (line_num)  # 设定运行时的testcase名称
-            case1(temp_case_name, row_value_list)  # 处理数据
-            test_suite.addTest(ExcelUnitTest(temp_case_name))  # 将case加入suite
-    wb.close()
-    # 返回测试套件
-    return test_suite
-
-
-def get_cell_values_by_cell_index(excel_file, sheet_index, cell_index):
-    """从excel中通过行号获取该行所有数据"""
-    wb = load_workbook(filename=excel_file, read_only=True)
-    # ws = wb.get_sheet_by_name(wb.get_sheet_names()[sheet_index])
-    ws = wb[wb.sheetnames[sheet_index]]
-    testcase_cn_name_list = map(lambda row: row[cell_index].value, ws.rows)
-    del testcase_cn_name_list[0]  # 删除第1行的列名数据
-    wb.close()
-    return testcase_cn_name_list
-
-
-def main():
-    """主函数：执行excel文件，获取数据生成suite，运行unittest生成报告"""
-    # 获取文件名
-    excel_file = './unit_excel.xlsx'
+    # 指定报告名称
+    report_save_path = './HTMLTestRunner.html'
+    # 指定运行的测试类
+    test_cases = unittest.TestLoader().loadTestsFromTestCase(ExcelUnitTest)
+    # 设定excel文件名
     excel_file_name = os.path.basename(excel_file)
-
-    # 从excel获取suite
-    test_suite = excel_driven(excel_file)
-
-    # 指定报告存储路径，运行
-    report_save_path = './HTMLTestRunner.html'  # 确定生成报告的路径
-    # 指定报告的case名称
-    testcase_cn_name_list = get_cell_values_by_cell_index(excel_file, 0, 1)
+    # 给定报告里的case名称
+    testcase_cn_name_list = pe.get_cell_values_by_cell_index(0, 1)
+    # 运行unittest并声称报告
     with open(report_save_path, 'wb') as fp:
         runner = HTMLTestRunner.HTMLTestRunner(
-            verbosity=2,
+            # verbosity=2,
             stream=fp,
             title='自动化测试报告',  # 配置报告信息
             description='详细测试用例结果',
@@ -185,8 +162,4 @@ def main():
             testclass_name=excel_file_name,
             testcass_list=testcase_cn_name_list
         )
-        runner.run(test_suite)
-
-
-if __name__ == '__main__':
-    main()
+        runner.run(test_cases)

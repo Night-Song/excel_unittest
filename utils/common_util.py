@@ -23,7 +23,7 @@ class BaseCommonUtil(object):
         return False
 
     @staticmethod
-    def check_params_type(local_params, **expected_params_type):
+    def check_params_type(local_params, **expected_param_types):
         """[summary] 遍历验证函数传参类型是否正确，静态方法
 
         Args:
@@ -34,7 +34,7 @@ class BaseCommonUtil(object):
             [description] 返回“是否需要return”的布尔值
             bool
         """
-        for key, expected_type in expected_params_type.items():
+        for key, expected_type in expected_param_types.items():
             # 传参中如果某个key对应的值是None，则跳过、判断下一个key：
             input_param_value = local_params[key]
             if input_param_value:

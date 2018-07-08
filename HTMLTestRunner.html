@@ -127,9 +127,9 @@ function html_escape(s) {
 <div class='heading'>
 <h1 style="font-family: Microsoft YaHei">自动化测试报告</h1>
 <p class='attribute'><strong>测试人员 : </strong> RenYi</p>
-<p class='attribute'><strong>开始时间 : </strong> 2018-01-21 23:37:34</p>
-<p class='attribute'><strong>合计耗时 : </strong> 0:00:05.303882</p>
-<p class='attribute'><strong>测试结果 : </strong> 共 2，通过 1，错误 1，通过率= 50.00%</p>
+<p class='attribute'><strong>开始时间 : </strong> 2018-07-09 00:52:02</p>
+<p class='attribute'><strong>合计耗时 : </strong> 0:00:01.801506</p>
+<p class='attribute'><strong>测试结果 : </strong> 共 3，通过 3，通过率= 100.00%</p>
 
 <p class='description'>详细测试用例结果</p>
 </div>
@@ -137,10 +137,10 @@ function html_escape(s) {
 
 
 <p id='show_detail_line'>
-<a class="btn btn-primary" href='javascript:showCase(0)'>概要{ 50.00% }</a>
+<a class="btn btn-primary" href='javascript:showCase(0)'>概要{ 100.00% }</a>
 <a class="btn btn-danger" href='javascript:showCase(1)'>失败{ 0 }</a>
-<a class="btn btn-success" href='javascript:showCase(2)'>通过{ 1 }</a>
-<a class="btn btn-info" href='javascript:showCase(3)'>所有{ 2 }</a>
+<a class="btn btn-success" href='javascript:showCase(2)'>通过{ 3 }</a>
+<a class="btn btn-info" href='javascript:showCase(3)'>所有{ 3 }</a>
 </p>
 
 <!-- [table-condensed] 让表格变得更紧凑 -->
@@ -164,38 +164,73 @@ function html_escape(s) {
     <td>详细</td>
 </tr>
 
-<!-- 若class == 'errorClass warning'，则显示警告的淡黄色背景 -->
-<!-- 若class == 'errorClass'，则可动态配置背景颜色 -->
-<tr class='errorClass'>
+<!-- 若class == 'passClass warning'，则显示警告的淡黄色背景 -->
+<!-- 若class == 'passClass'，则可动态配置背景颜色 -->
+<tr class='passClass'>
     <td>unit_excel.xlsx: 存接口的excel文件</td>
     <!-- class="text-center" == 居中显示，不加则按左对齐显示 -->
-    <td class="text-center">2</td>
-    <td class="text-center">1</td>
+    <td class="text-center">3</td>
+    <td class="text-center">3</td>
     <td class="text-center">0</td>
-    <td class="text-center">1</td>
-    <td class="text-center"><a href="javascript:showClassDetail('c1',2)" class="detail" id='c1'>详细</a></td>
+    <td class="text-center">0</td>
+    <td class="text-center"><a href="javascript:showClassDetail('c1',3)" class="detail" id='c1'>详细</a></td>
 </tr>
 
 <tr id='pt1_1' class='hiddenRow'>
-    <td class='passCase'><div class='testcase'>case1_post接口示例</div></td>
-    <td colspan='5' align='center'><span class="label label-success success">通过</span></td>
-</tr>
-
-<tr id='ft1_2' class='none'>
-    <td class='errorCase'><div class='testcase'>case2_GET接口示例</div></td>
+    <td class='passCase'><div class='testcase'>case1_post接口示例: ddt测试函数</div></td>
     <td colspan='5' align='center'>
     <!--默认收起错误信息 -Findyou
-    <button id='btn_ft1_2' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_ft1_2'>错误</button>
-    <div id='div_ft1_2' class="collapse">  -->
+    <button id='btn_pt1_1' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_1'>通过</button>
+    <div id='div_pt1_1' class="collapse">  -->
 
     <!-- 默认展开错误信息 -Findyou -->
-    <button id='btn_ft1_2' type="button"  class="btn btn-danger btn-xs" data-toggle="collapse" data-target='#div_ft1_2'>错误</button>
-    <div id='div_ft1_2' class="collapse in">
+    <button id='btn_pt1_1' type="button"  class="btn btn-danger btn-xs" data-toggle="collapse" data-target='#div_pt1_1'>通过</button>
+    <div id='div_pt1_1' class="collapse in">
     <pre>
     
-ft1_2: Traceback (most recent call last):
-  File "&lt;string&gt;", line 13, in test_2
-ReadTimeout: HTTPSConnectionPool(host='baike.baidu.com', port=443): Read timed out. (read timeout=5)
+pt1_1: (&lt;type 'int'&gt;, 0)
+
+
+    </pre>
+    </div>
+    </td>
+</tr>
+
+<tr id='pt1_2' class='hiddenRow'>
+    <td class='passCase'><div class='testcase'>case2_GET接口示例: ddt测试函数</div></td>
+    <td colspan='5' align='center'>
+    <!--默认收起错误信息 -Findyou
+    <button id='btn_pt1_2' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_2'>通过</button>
+    <div id='div_pt1_2' class="collapse">  -->
+
+    <!-- 默认展开错误信息 -Findyou -->
+    <button id='btn_pt1_2' type="button"  class="btn btn-danger btn-xs" data-toggle="collapse" data-target='#div_pt1_2'>通过</button>
+    <div id='div_pt1_2' class="collapse in">
+    <pre>
+    
+pt1_2: (&lt;type 'int'&gt;, 1)
+
+
+    </pre>
+    </div>
+    </td>
+</tr>
+
+<tr id='pt1_3' class='hiddenRow'>
+    <td class='passCase'><div class='testcase'>case1_post接口示例: ddt测试函数</div></td>
+    <td colspan='5' align='center'>
+    <!--默认收起错误信息 -Findyou
+    <button id='btn_pt1_3' type="button"  class="btn btn-danger btn-xs collapsed" data-toggle="collapse" data-target='#div_pt1_3'>通过</button>
+    <div id='div_pt1_3' class="collapse">  -->
+
+    <!-- 默认展开错误信息 -Findyou -->
+    <button id='btn_pt1_3' type="button"  class="btn btn-danger btn-xs" data-toggle="collapse" data-target='#div_pt1_3'>通过</button>
+    <div id='div_pt1_3' class="collapse in">
+    <pre>
+    
+pt1_3: (&lt;type 'int'&gt;, 0)
+&lt;string&gt;:6: SyntaxWarning: assertion is always true, perhaps remove parentheses?
+0
 
 
     </pre>
@@ -205,11 +240,11 @@ ReadTimeout: HTTPSConnectionPool(host='baike.baidu.com', port=443): Read timed o
 
 <tr id='total_row' class="text-center active">
     <td>总计</td>
-    <td>2</td>
-    <td>1</td>
+    <td>3</td>
+    <td>3</td>
     <td>0</td>
-    <td>1</td>
-    <td>通过率：50.00%</td>
+    <td>0</td>
+    <td>通过率：100.00%</td>
 </tr>
 </table>
 

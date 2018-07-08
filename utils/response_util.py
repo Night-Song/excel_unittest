@@ -40,20 +40,20 @@ def pretty_format(resp):
         return    # 不写返回值，等于 return None
 
 
-def get_json_node(resp_json_obj, node_path):
-    """工具方法：按json节点逐层取值。如果节点不存在，则先提示，然后返回None。"""
-    node_path_list = node_path.split(".")
-    if len(node_path.split(".")) < 2:
-        print "json节点输入有误！获取不到该节点"
-        return None
-    del node_path_list[0]  # 删除第1个“$”符号
-    try:
-        for i in node_path_list:
-            resp_json_obj = resp_json_obj[i]
-        return resp_json_obj
-    except KeyError as e:
-        error_text = "Json节点输入有误！%s节点不存在，请检查输入" % (e.message)
-        raise JsonNodeNonExistentException(error_text)
+# def get_json_node(resp_json_obj, node_path):
+#     """工具方法：按json节点逐层取值。如果节点不存在，则先提示，然后返回None。"""
+#     node_path_list = node_path.split(".")
+#     if len(node_path.split(".")) < 2:
+#         print "json节点输入有误！获取不到该节点"
+#         return None
+#     del node_path_list[0]  # 删除第1个“$”符号
+#     try:
+#         for i in node_path_list:
+#             resp_json_obj = resp_json_obj[i]
+#         return resp_json_obj
+#     except KeyError as e:
+#         error_text = "Json节点输入有误！%s节点不存在，请检查输入" % (e.message)
+#         raise JsonNodeNonExistentException(error_text)
 
 
 class JsonDecryptException(Exception):

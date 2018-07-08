@@ -1,4 +1,5 @@
 # coding:utf-8
+
 """http请求工具类"""
 from common_util import BaseCommonUtil
 import requests
@@ -8,13 +9,13 @@ import url_param_convert_util as upc_util
 class RequestUtil(object):
     """docstring for RequestUtil"""
 
-    def __init__(self, timeout=10, encoding="utf-8"):
+    def __init__(self, timeout=10, encoding="utf-8", **kwargs):
         """构造函数"""
-        self._timeout = timeout
+        # self._timeout = timeout
         self._encoding = encoding
         self._headers = None
-        self._redirects = False
-        self._verify = True
+        kwargs['timeout'] = timeout
+        self._kwargs = kwargs
 
     # ------------------------------ headers ------------------------------
     @property
@@ -28,32 +29,8 @@ class RequestUtil(object):
         BaseCommonUtil.check_param_type(locals(), "new_headers", dict)
         self._headers = new_headers
 
-    # ------------------------------ redirects ------------------------------
-    @property
-    def redirects(self):
-        """设置redirects-bean get()方法"""
-        return self._redirects
-
-    @redirects.setter
-    def redirects(self, new_redirects):
-        """设置redirects-bean set()方法"""
-        BaseCommonUtil.check_param_type(locals(), "new_redirects", basestring)
-        self._redirects = new_redirects
-
-    # ------------------------------ verify ------------------------------
-    @property
-    def verify(self):
-        """设置verify-bean get()方法"""
-        return self._verify
-
-    @verify.setter
-    def verify(self, new_verify):
-        """设置verify-bean set()方法"""
-        BaseCommonUtil.check_param_type(locals(), "new_verify", bool)
-        self._verify = new_verify
-
     # ------------------------------ http method ------------------------------
-    def get(self, url, url_params=None, modify_params=None):
+    def get(self, url, url_params=None, modify_params=None, **kwargs2):
         """[summary] http协议，接口测试工具类，get函数
 
         [description]
@@ -76,12 +53,14 @@ class RequestUtil(object):
         url, url_params = self.convert_url_and_params(url, url_params)
         # 更新参数
         self.update_params(url_params, modify_params)
+        # 合并其他参数
+        kwargs = dict(self._kwargs, **kwargs2)
         # 请求接口
         try:
-            resp = requests.get(url, params=url_params, headers=self._headers, timeout=self._timeout, allow_redirects=self._redirects, verify=self._verify)
+            resp = requests.get(url, params=url_params,
+                                headers=self._headers, **kwargs)
         except requests.exceptions.ConnectTimeout as e:
             raise ConnectTimeoutException(e.message.url, e.message.reason[1])
-            return
         # 设置显示内容编码
         resp.encoding = self._encoding
         # 异常判断
@@ -91,7 +70,7 @@ class RequestUtil(object):
         resp.close()
         return resp_text
 
-    def post(self, url, url_params, modify_params=None):
+    def post(self, url, url_params, modify_params=None, **kwargs2):
         """Content-Type = application/x-www-form-urlencoded"""
         # 传参类型检查
         BaseCommonUtil.check_params_type(locals(), url=str, url_params=(str, dict), modify_params=dict)
@@ -99,12 +78,14 @@ class RequestUtil(object):
         url, url_params = self.convert_url_and_params(url, url_params)
         # 更新参数
         self.update_params(url_params, modify_params)
+        # 合并其他参数
+        kwargs = dict(self._kwargs, **kwargs2)
         # 请求接口
         try:
-            resp = requests.post(url, data=url_params, headers=self._headers, timeout=self._timeout, allow_redirects=self._redirects, verify=self._verify)
+            resp = requests.post(url, data=url_params,
+                                 headers=self._headers, **kwargs)
         except requests.exceptions.ConnectTimeout as e:
             raise ConnectTimeoutException(e.message.url, self._timeout)
-            return
         # 设置显示内容编码
         resp.encoding = self._encoding
         # 异常判断
@@ -114,18 +95,20 @@ class RequestUtil(object):
         resp.close()
         return resp_text
 
-    def post_multipart_form_data(self, url, url_params=None, files=None):
+    def post_multipart_form_data(self, url, url_params=None, files=None, **kwargs2):
         """Content-Type = multipart/form-data，注意：暂不提供modify_params"""
         # 传参类型检查
         BaseCommonUtil.check_params_type(locals(), url=str, url_params=(str, dict), files=dict)
         # 更新参数
         self.update_params(url_params)
+        # 合并其他参数
+        kwargs = dict(self._kwargs, **kwargs2)
         # 请求接口
         try:
-            resp = requests.post(url, data=url_params, files=files, headers=self._headers, timeout=self._timeout, allow_redirects=self._redirects, verify=self._verify)
+            resp = requests.post(url, data=url_params, files=files,
+                                 headers=self._headers, **kwargs)
         except requests.exceptions.ConnectTimeout as e:
             raise ConnectTimeoutException(e.message.url, self._timeout)
-            return
         # 设置显示内容编码
         resp.encoding = self._encoding
         # 异常判断
