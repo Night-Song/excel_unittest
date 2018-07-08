@@ -1,7 +1,7 @@
 ## 更新：
 2018年07月08日，重构脚本程序，上传excel_unittes2.py文件。  
 变更说明：  
-1）框架改为使用unittest+openpyxl+requests+ddt+HTMLTestRunner，从而去掉exec()函数，减少调试的麻烦。  
+1）程序改为使用unittest+openpyxl+requests+ddt+HTMLTestRunner，从而去掉exec()函数，减少调试的麻烦。  
 2）增加run_script()断言函数，增加断言的便利性。
 
 
@@ -22,7 +22,7 @@
 · url：接口URL指定字段。  
 · url_params：接口参数指定字段。  
 · check_point_type：断言函数指定字段。  
-· node_path/script：json路径指定字段或脚本存放字段。  
+· node_path/script：json路径指定字段或自定义断言脚本存放字段。  
 · expected_result：预期结果指定字段。  
 
 #### 接口参数格式说明：  
