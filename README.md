@@ -1,6 +1,6 @@
 ## 更新：
-2018年07月08日，重构脚本程序，上传excel_unittes/Users/renyi/Workspace/github-workspace/excel_unittest/README.mdt2.py文件。
-变更说明：    
+2018年07月08日，重构脚本程序，上传excel_unittes2.py文件。  
+变更说明：  
 1）框架改为使用unittest+openpyxl+requests+ddt+HTMLTestRunner，从而去掉exec()函数，减少调试的麻烦。  
 2）增加run_script()断言函数，增加断言的便利性。
 
